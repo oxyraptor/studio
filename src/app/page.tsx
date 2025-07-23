@@ -32,12 +32,17 @@ const NavDropdown = ({ label, children }: { label: string, children: React.React
 export default function Home() {
   return (
     <div className="relative flex flex-col min-h-screen bg-black text-white">
-      {/* Background pattern */}
-      <div 
-        className="absolute inset-0 z-0 opacity-10"
-        style={{ backgroundImage: 'url("https://www.toptal.com/designers/subtlepatterns/uploads/struckaxiom.png")' }} 
+      {/* Background Image */}
+      <Image
+        src="https://placehold.co/1920x1080.png"
+        alt="Background image of a modern city"
+        layout="fill"
+        objectFit="cover"
+        quality={80}
+        className="absolute inset-0 z-0 opacity-20"
+        data-ai-hint="modern city architecture"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black z-10" />
+      <div className="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent z-10" />
       
       <div className="relative z-20 flex flex-col flex-grow">
         <header className="px-4 py-3 sm:px-6 lg:px-8 border-b border-white/10">
@@ -111,13 +116,13 @@ export default function Home() {
                         </Link>
                     </Button>
                 </div>
-                <div className="relative h-64 md:h-auto md:w-full">
+                <div className="relative h-64 md:h-96 md:w-full">
                   <Image 
                       src="https://placehold.co/600x400.png"
                       alt="Citizen Experience Center"
                       width={600}
                       height={400}
-                      className="rounded-lg shadow-2xl"
+                      className="rounded-lg shadow-2xl object-cover w-full h-full"
                       data-ai-hint="modern government building"
                   />
                 </div>
