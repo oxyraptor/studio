@@ -19,7 +19,7 @@ const timeSlots = Array.from({ length: 6 }, (_, i) => {
 }); // Slots from 09:00, 10:30, 12:00, 13:30, 15:00, 16:30
 
 const lunchBreakStart = "13:00";
-const lunchBreakEnd = "14:30";
+const lunchBreakEnd = "13:45";
 const MAX_TICKETS_PER_SLOT = 20;
 const DAILY_VISITOR_LIMIT = 100;
 
