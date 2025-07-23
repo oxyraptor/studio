@@ -11,15 +11,17 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { BookingProgress } from "@/components/booking-progress";
 
-const timeSlots = Array.from({ length: 6 }, (_, i) => {
-    const totalMinutes = i * 90; // 1.5 hours = 90 minutes
-    const hour = 9 + Math.floor(totalMinutes / 60);
-    const minute = totalMinutes % 60;
-    return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-}); // Slots from 09:00, 10:30, 12:00, 13:30, 15:00, 16:30
+const timeSlots = [
+    "09:00", 
+    "10:30", 
+    // Lunch break from 12:00 to 13:00
+    "13:00", 
+    "14:30", 
+    "16:00"
+];
 
-const lunchBreakStart = "13:00";
-const lunchBreakEnd = "13:45";
+const lunchBreakStart = "12:00";
+const lunchBreakEnd = "13:00";
 const MAX_TICKETS_PER_SLOT = 20;
 const DAILY_VISITOR_LIMIT = 100;
 
@@ -30,8 +32,12 @@ const getBookingsForDate = (date: string) => {
     const mockBookings: Record<string, number> = {};
     const dateSeed = new Date(date).getDate();
     let totalBooked = 0;
+    
+    const allSlotsForBooking = [
+        "09:00", "10:30", "12:00", "13:30", "15:00", "16:30"
+    ];
 
-    timeSlots.forEach((slot, index) => {
+    allSlotsForBooking.forEach((slot, index) => {
         // Create pseudo-randomness based on date and slot for booked tickets
         const bookedCount = (dateSeed * (index + 1)) % (MAX_TICKETS_PER_SLOT + 1);
         totalBooked += bookedCount;
@@ -42,7 +48,7 @@ const getBookingsForDate = (date: string) => {
     // This is a mock scenario; a real DB would prevent this.
     if (totalBooked > DAILY_VISITOR_LIMIT) {
         let excess = totalBooked - DAILY_VISITOR_LIMIT;
-        for (const slot of [...timeSlots].reverse()) {
+        for (const slot of [...allSlotsForBooking].reverse()) {
             if (excess <= 0) break;
             const currentBooked = mockBookings[slot];
             const reduction = Math.min(currentBooked, excess);
@@ -53,7 +59,7 @@ const getBookingsForDate = (date: string) => {
     
     // Now calculate availability
     const availableSlots: Record<string, number> = {};
-    timeSlots.forEach(slot => {
+    allSlotsForBooking.forEach(slot => {
         const booked = mockBookings[slot] ?? 0;
         availableSlots[slot] = MAX_TICKETS_PER_SLOT - booked;
     });
@@ -96,19 +102,7 @@ export default function SelectTimePage() {
     }
 
     const formattedDate = format(new Date(date), 'PPP');
-    const totalAvailableToday = Object.values(availableSlots).reduce((sum, count, index) => {
-      const slot = timeSlots[index];
-      // A slot is unavailable if it starts during lunch break, or ends after lunch break starts
-      const slotStart = new Date(`${date}T${slot}:00`);
-      const slotEnd = new Date(slotStart.getTime() + 90 * 60000); // 90 minutes
-      const lunchStart = new Date(`${date}T${lunchBreakStart}:00`);
-      const lunchEnd = new Date(`${date}T${lunchBreakEnd}:00`);
-
-      if (slotStart < lunchEnd && slotEnd > lunchStart) {
-        return sum;
-      }
-      return sum + count;
-    }, 0);
+    const totalAvailableToday = Object.values(availableSlots).reduce((sum, count) => sum + count, 0);
     const displayLimit = Math.min(totalAvailableToday, DAILY_VISITOR_LIMIT);
 
     return (
@@ -131,17 +125,8 @@ export default function SelectTimePage() {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                         {timeSlots.map(slot => {
-                            const slotStart = new Date(`${date}T${slot}:00`);
-                            const slotEnd = new Date(slotStart.getTime() + 90 * 60000); // 90 minutes
-                            const lunchStart = new Date(`${date}T${lunchBreakStart}:00`);
-                            const lunchEnd = new Date(`${date}T${lunchBreakEnd}:00`);
-
-                            if (slotStart < lunchEnd && slotEnd > lunchStart) {
-                                return null;
-                            }
-                            
                             const availableCount = availableSlots[slot] ?? 0;
                             const isAvailable = availableCount > 0;
                             return (
