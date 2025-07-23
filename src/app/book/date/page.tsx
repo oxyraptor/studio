@@ -45,7 +45,7 @@ export default function SelectDatePage() {
       <div className="w-full max-w-md">
         <BookingProgress currentStep={1} />
       </div>
-      <Card className="w-full max-w-md shadow-lg rounded-xl">
+      <Card className="w-full max-w-md shadow-lg rounded-xl bg-card text-card-foreground border-border">
         <CardHeader>
           <CardTitle className="font-headline text-3xl">Step 1: Select a Date</CardTitle>
           <CardDescription>Choose the date for your visit.</CardDescription>
@@ -56,7 +56,7 @@ export default function SelectDatePage() {
                 selected={date}
                 onSelect={setDate}
                 disabled={(day) => isPast(day) && !isToday(day)}
-                className="rounded-md border"
+                className="rounded-md border-border"
             />
         </CardContent>
         <CardFooter>

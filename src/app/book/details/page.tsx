@@ -86,7 +86,7 @@ export default function DetailsPage() {
         <div className="w-full max-w-lg">
             <BookingProgress currentStep={3} />
         </div>
-        <Card className="w-full max-w-lg shadow-lg rounded-xl">
+        <Card className="w-full max-w-lg shadow-lg rounded-xl bg-card text-card-foreground border-border">
           <CardHeader>
             <CardTitle className="font-headline text-3xl">Step 3: Visitor Details</CardTitle>
             <CardDescription>Enter details for your visit on <strong>{formattedDate}</strong> at <strong>{time}</strong>.</CardDescription>
@@ -107,7 +107,7 @@ export default function DetailsPage() {
                     </FormItem>
                   )}
                 />
-                 <div className="flex justify-between items-center pt-4 border-t">
+                 <div className="flex justify-between items-center pt-4 border-t border-border">
                     <span className="text-lg font-semibold">Total Amount:</span>
                     <span className="text-2xl font-bold text-primary">₹{totalAmount.toLocaleString()}</span>
                 </div>

@@ -12,12 +12,12 @@ import { format } from "date-fns";
 import { BookingProgress } from "@/components/booking-progress";
 
 const timeSlots = [
-    "09:00", 
-    "10:30", 
+    "09:00",
+    "10:30",
     // Lunch break from 12:00 to 13:00
-    "13:00", 
-    "14:30", 
-    "16:00"
+    "13:00",
+    "14:30",
+    "16:00",
 ];
 
 const lunchBreakStart = "12:00";
@@ -34,7 +34,7 @@ const getBookingsForDate = (date: string) => {
     let totalBooked = 0;
     
     const allSlotsForBooking = [
-        "09:00", "10:30", "12:00", "13:30", "15:00", "16:30"
+        "09:00", "10:30", "13:00", "14:30", "16:00"
     ];
 
     allSlotsForBooking.forEach((slot, index) => {
@@ -116,7 +116,7 @@ export default function SelectTimePage() {
             <div className="w-full max-w-lg">
                 <BookingProgress currentStep={2} />
             </div>
-            <Card className="w-full max-w-lg shadow-lg rounded-xl">
+            <Card className="w-full max-w-lg shadow-lg rounded-xl bg-card text-card-foreground border-border">
                 <CardHeader>
                     <CardTitle className="font-headline text-3xl">Step 2: Select a Time</CardTitle>
                     <CardDescription>Choose a time for your visit on <strong>{formattedDate}</strong>.

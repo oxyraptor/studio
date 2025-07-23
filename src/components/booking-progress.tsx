@@ -49,7 +49,7 @@ const Step = ({
         <div
           className={cn(
             "w-3 h-3 rounded-full transition-all duration-300",
-            isCurrent ? "bg-primary" : "bg-border"
+            isCurrent ? "bg-primary" : "bg-background"
           )}
         />
       )}
