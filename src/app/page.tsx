@@ -61,7 +61,7 @@ export default function Home() {
                     <DropdownMenuItem>Exhibits</DropdownMenuItem>
                     <DropdownMenuItem>Virtual Tour</DropdownMenuItem>
                 </NavDropdown>
-                <NavLink href="#">Visit</NavLink>
+                <NavLink href="/map">Visit</NavLink>
                 <NavDropdown label="Media">
                     <DropdownMenuItem>News</DropdownMenuItem>
                     <DropdownMenuItem>Gallery</DropdownMenuItem>
@@ -83,7 +83,7 @@ export default function Home() {
                           <nav className="flex flex-col gap-4 mt-8">
                               <NavLink href="#">About</NavLink>
                               <NavLink href="#">Explore</NavLink>
-                              <NavLink href="#">Visit</NavLink>
+                              <NavLink href="/map">Visit</NavLink>
                               <NavLink href="#">Media</NavLink>
                               <NavLink href="#">Contact us</NavLink>
                               <Button asChild className={cn(buttonVariants({ variant: 'default' }), "bg-primary text-primary-foreground hover:bg-primary/90 w-full")}>
