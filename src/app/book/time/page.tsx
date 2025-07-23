@@ -5,13 +5,15 @@ import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Clock, ArrowLeft } from "lucide-react";
+import { Clock, ArrowLeft, Utensils } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { format } from "date-fns";
 import { BookingProgress } from "@/components/booking-progress";
 
 const timeSlots = Array.from({ length: 9 }, (_, i) => `${(i + 9).toString().padStart(2, '0')}:00`);
+const lunchBreakStart = "13:00";
+const lunchBreakEnd = "14:00"; // Represents the 13:00-14:59 block for simplicity
 const MAX_TICKETS_PER_SLOT = 20;
 const DAILY_VISITOR_LIMIT = 100;
 
@@ -88,7 +90,13 @@ export default function SelectTimePage() {
     }
 
     const formattedDate = format(new Date(date), 'PPP');
-    const totalAvailableToday = Object.values(availableSlots).reduce((sum, count) => sum + count, 0);
+    const totalAvailableToday = Object.values(availableSlots).reduce((sum, count, index) => {
+      const slot = timeSlots[index];
+      if (slot >= lunchBreakStart && slot <= lunchBreakEnd) {
+        return sum;
+      }
+      return sum + count;
+    }, 0);
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4">
@@ -112,6 +120,20 @@ export default function SelectTimePage() {
                 <CardContent>
                     <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
                         {timeSlots.map(slot => {
+                            if (slot >= lunchBreakStart && slot <= lunchBreakEnd) {
+                                if (slot === lunchBreakStart) {
+                                    return (
+                                        <div
+                                            key={slot}
+                                            className="col-span-2 flex items-center justify-center bg-muted/50 rounded-md h-16 text-muted-foreground"
+                                        >
+                                           <Utensils className="inline-block h-5 w-5 mr-2"/> Lunch Break
+                                        </div>
+                                    );
+                                }
+                                return null;
+                            }
+                            
                             const availableCount = availableSlots[slot] ?? 0;
                             const isAvailable = availableCount > 0;
                             return (
