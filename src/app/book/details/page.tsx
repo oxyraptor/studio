@@ -30,6 +30,8 @@ const detailsSchema = z.object({
 
 type DetailsFormValues = z.infer<typeof detailsSchema>;
 
+const COST_PER_VISITOR = 500;
+
 export default function DetailsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -47,6 +49,7 @@ export default function DetailsPage() {
   });
   
   const numberOfVisitors = form.watch("numberOfVisitors");
+  const totalAmount = (numberOfVisitors || 0) * COST_PER_VISITOR;
 
   React.useEffect(() => {
     if (!date || !time) {
@@ -100,6 +103,10 @@ export default function DetailsPage() {
                     </FormItem>
                   )}
                 />
+                 <div className="flex justify-between items-center pt-4 border-t">
+                    <span className="text-lg font-semibold">Total Amount:</span>
+                    <span className="text-2xl font-bold text-primary">₹{totalAmount.toLocaleString()}</span>
+                </div>
               </CardContent>
               <CardFooter className="flex flex-col sm:flex-row gap-2">
                  <Button asChild variant="link" className="w-full sm:w-auto">
@@ -125,6 +132,8 @@ export default function DetailsPage() {
                 <AlertDialogTitle className="text-center text-2xl">Booking Confirmed!</AlertDialogTitle>
                 <AlertDialogDescription className="text-center">
                   Your visit for {numberOfVisitors} {numberOfVisitors > 1 ? 'people' : 'person'} on {formattedDate} at {time} is booked.
+                  <br />
+                  Total amount to be paid: <strong>₹{totalAmount.toLocaleString()}</strong>
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
