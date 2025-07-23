@@ -1,7 +1,6 @@
-import { BookingSection } from "@/components/booking-section";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { MapPin } from "lucide-react";
+import { CalendarCheck, MapPin } from "lucide-react";
 import Link from "next/link";
 
 export default function Home() {
@@ -23,13 +22,22 @@ export default function Home() {
           </Link>
         </div>
       </header>
-      <main className="flex-grow px-4 sm:px-6 lg:px-8 py-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1">
-            <div className="lg:col-span-3">
-              <BookingSection />
+      <main className="flex-grow px-4 sm:px-6 lg:px-8 py-8 flex items-center justify-center">
+        <div className="max-w-md text-center">
+            <div className="bg-card p-8 rounded-xl shadow-lg border">
+                <CalendarCheck className="h-16 w-16 mx-auto text-primary" />
+                <h2 className="mt-6 text-3xl font-bold text-foreground">
+                    Plan Your Visit
+                </h2>
+                <p className="mt-4 text-muted-foreground">
+                    Reserve your spot at the CitizExperience Center. Our new booking process makes it easier than ever.
+                </p>
+                <Button asChild size="lg" className="mt-8 w-full">
+                    <Link href="/book/date">
+                        Book Your Visit
+                    </Link>
+                </Button>
             </div>
-          </div>
         </div>
       </main>
       <footer className="px-4 py-6 sm:px-6 lg:px-8 mt-auto">
