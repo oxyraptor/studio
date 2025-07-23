@@ -34,9 +34,9 @@ export default function ContactPage() {
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      whatsapp: "",
+      name: searchParams.get("name") || "",
+      email: searchParams.get("email") || "",
+      whatsapp: searchParams.get("whatsapp") || "",
     },
   });
 

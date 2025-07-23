@@ -4,8 +4,13 @@
 import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { format } from "date-fns";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,6 +28,20 @@ import { Separator } from "@/components/ui/separator";
 
 const COST_PER_VISITOR = 500;
 
+const paymentSchema = z.object({
+    cardNumber: z.string().refine((val) => /^\d{16}$/.test(val), {
+      message: "Card number must be 16 digits.",
+    }),
+    expiryDate: z.string().refine((val) => /^(0[1-9]|1[0-2])\/?([0-9]{2})$/.test(val), {
+        message: "Invalid expiry date. Use MM/YY format.",
+    }),
+    cvc: z.string().refine((val) => /^\d{3}$/.test(val), {
+      message: "CVC must be 3 digits.",
+    }),
+});
+
+type PaymentFormValues = z.infer<typeof paymentSchema>;
+
 export default function PaymentPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -34,6 +53,15 @@ export default function PaymentPage() {
   const whatsapp = searchParams.get("whatsapp");
   const { toast } = useToast();
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+
+  const form = useForm<PaymentFormValues>({
+    resolver: zodResolver(paymentSchema),
+    defaultValues: {
+      cardNumber: "",
+      expiryDate: "",
+      cvc: "",
+    },
+  });
 
   React.useEffect(() => {
     if (!date || !time || !visitors || !name || !email || !whatsapp) {
@@ -53,12 +81,10 @@ export default function PaymentPage() {
   const numberOfVisitors = parseInt(visitors, 10);
   const totalAmount = numberOfVisitors * COST_PER_VISITOR;
   const formattedDate = format(new Date(date), "PPP");
-  const goBackLink = `/book/contact?date=${date}&time=${time}&visitors=${visitors}`;
+  const goBackLink = `/book/contact?date=${date}&time=${time}&visitors=${visitors}&name=${name}&email=${email}&whatsapp=${whatsapp}`;
   
-  const handlePayment = () => {
-    // In a real application, you would integrate a payment gateway here.
-    // For this prototype, we'll just show the confirmation dialog.
-    console.log("Payment initiated for:", { date, time, visitors, name, email, whatsapp, totalAmount });
+  function onPaymentSubmit(data: PaymentFormValues) {
+    console.log("Dummy Payment Submitted:", data);
     setIsDialogOpen(true);
   };
 
@@ -117,16 +143,65 @@ export default function PaymentPage() {
                 <span className="text-2xl font-bold text-primary">₹{totalAmount.toLocaleString()}</span>
             </div>
           </CardContent>
-          <CardFooter className="flex flex-col sm:flex-row gap-2">
-            <Button asChild variant="link" className="w-full sm:w-auto">
-              <Link href={goBackLink}>
-                <ArrowLeft className="mr-2 h-4 w-4" /> Go back
-              </Link>
-            </Button>
-            <Button onClick={handlePayment} size="lg" className="w-full sm:w-auto flex-grow bg-primary text-primary-foreground hover:bg-primary/90">
-                <CreditCard className="mr-2 h-4 w-4" /> Pay Now
-            </Button>
-          </CardFooter>
+
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onPaymentSubmit)}>
+                <CardContent className="space-y-4">
+                    <Separator />
+                     <FormField
+                        control={form.control}
+                        name="cardNumber"
+                        render={({ field }) => (
+                            <FormItem>
+                            <FormLabel>Card Number</FormLabel>
+                            <FormControl>
+                                <Input placeholder="0000 0000 0000 0000" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                            </FormItem>
+                        )}
+                        />
+                    <div className="flex gap-4">
+                        <FormField
+                            control={form.control}
+                            name="expiryDate"
+                            render={({ field }) => (
+                                <FormItem className="flex-1">
+                                <FormLabel>Expiry Date</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="MM/YY" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                                </FormItem>
+                            )}
+                            />
+                        <FormField
+                            control={form.control}
+                            name="cvc"
+                            render={({ field }) => (
+                                <FormItem className="flex-1">
+                                <FormLabel>CVC</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="123" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                </CardContent>
+                <CardFooter className="flex flex-col sm:flex-row gap-2">
+                    <Button asChild variant="link" className="w-full sm:w-auto">
+                    <Link href={goBackLink}>
+                        <ArrowLeft className="mr-2 h-4 w-4" /> Go back
+                    </Link>
+                    </Button>
+                    <Button type="submit" size="lg" className="w-full sm:w-auto flex-grow bg-primary text-primary-foreground hover:bg-primary/90">
+                        <CreditCard className="mr-2 h-4 w-4" /> Pay Now
+                    </Button>
+                </CardFooter>
+            </form>
+          </Form>
         </Card>
       </div>
 
