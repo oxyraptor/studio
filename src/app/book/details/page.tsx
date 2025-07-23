@@ -10,16 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { ArrowLeft, CheckCircle, Users } from "lucide-react";
+import { ArrowLeft, ArrowRight, Users } from "lucide-react";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
@@ -39,8 +30,6 @@ export default function DetailsPage() {
   const date = searchParams.get("date");
   const time = searchParams.get("time");
   const { toast } = useToast();
-
-  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
   const form = useForm<DetailsFormValues>({
     resolver: zodResolver(detailsSchema),
@@ -64,8 +53,12 @@ export default function DetailsPage() {
   }, [date, time, router, toast]);
 
   function onSubmit(data: DetailsFormValues) {
-    console.log("Booking submitted:", { date, time, ...data });
-    setIsDialogOpen(true);
+    const params = new URLSearchParams({
+      date: date!,
+      time: time!,
+      visitors: data.numberOfVisitors.toString(),
+    });
+    router.push(`/book/contact?${params.toString()}`);
   }
   
   if (!date || !time) {
@@ -119,34 +112,13 @@ export default function DetailsPage() {
                     </Link>
                 </Button>
                 <Button type="submit" size="lg" className="w-full sm:w-auto flex-grow bg-primary text-primary-foreground hover:bg-primary/90">
-                  Confirm Booking
+                  Next <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </CardFooter>
             </form>
           </Form>
         </Card>
       </div>
-
-       <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <div className="flex justify-center">
-                    <CheckCircle className="h-16 w-16 text-green-500" />
-                </div>
-                <AlertDialogTitle className="text-center text-2xl">Booking Confirmed!</AlertDialogTitle>
-                <AlertDialogDescription className="text-center">
-                  Your visit for {numberOfVisitors} {numberOfVisitors > 1 ? 'people' : 'person'} on {formattedDate} at {time} is booked.
-                  <br />
-                  Total amount to be paid: <strong>₹{totalAmount.toLocaleString()}</strong>
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogAction onClick={() => router.push('/')} className="w-full">
-                  Back to Home
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-        </AlertDialog>
     </>
   );
 }

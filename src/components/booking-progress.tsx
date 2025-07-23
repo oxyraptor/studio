@@ -4,7 +4,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-const steps = ["Select Date", "Select Time", "Visitor Details"];
+const steps = ["Select Date", "Select Time", "Visitor Details", "Contact Details"];
 
 interface BookingProgressProps {
   currentStep: number;
