@@ -11,9 +11,14 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { BookingProgress } from "@/components/booking-progress";
 
-const timeSlots = Array.from({ length: 9 }, (_, i) => `${(i + 9).toString().padStart(2, '0')}:00`);
+const timeSlots = Array.from({ length: 18 }, (_, i) => {
+    const hour = 9 + Math.floor(i / 2);
+    const minute = i % 2 === 0 ? '00' : '30';
+    return `${hour.toString().padStart(2, '0')}:${minute}`;
+}).filter(slot => slot < "18:00"); // Slots from 09:00 to 17:30
+
 const lunchBreakStart = "13:00";
-const lunchBreakEnd = "14:00"; // Represents the 13:00-14:59 block for simplicity
+const lunchBreakEnd = "14:30";
 const MAX_TICKETS_PER_SLOT = 20;
 const DAILY_VISITOR_LIMIT = 100;
 
@@ -36,7 +41,7 @@ const getBookingsForDate = (date: string) => {
     // This is a mock scenario; a real DB would prevent this.
     if (totalBooked > DAILY_VISITOR_LIMIT) {
         let excess = totalBooked - DAILY_VISITOR_LIMIT;
-        for (const slot of timeSlots.reverse()) {
+        for (const slot of [...timeSlots].reverse()) {
             if (excess <= 0) break;
             const currentBooked = mockBookings[slot];
             const reduction = Math.min(currentBooked, excess);
@@ -92,11 +97,12 @@ export default function SelectTimePage() {
     const formattedDate = format(new Date(date), 'PPP');
     const totalAvailableToday = Object.values(availableSlots).reduce((sum, count, index) => {
       const slot = timeSlots[index];
-      if (slot >= lunchBreakStart && slot <= lunchBreakEnd) {
+      if (slot >= lunchBreakStart && slot < lunchBreakEnd) {
         return sum;
       }
       return sum + count;
     }, 0);
+    const displayLimit = Math.min(totalAvailableToday, DAILY_VISITOR_LIMIT);
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4">
@@ -114,23 +120,13 @@ export default function SelectTimePage() {
                     <CardTitle className="font-headline text-3xl">Step 2: Select a Time</CardTitle>
                     <CardDescription>Choose a time for your visit on <strong>{formattedDate}</strong>.
                      <br />
-                     Total tickets available for today: <strong>{totalAvailableToday > DAILY_VISITOR_LIMIT ? DAILY_VISITOR_LIMIT : totalAvailableToday}</strong>
+                     Total tickets available for today: <strong>{displayLimit}</strong>
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
                         {timeSlots.map(slot => {
-                            if (slot >= lunchBreakStart && slot <= lunchBreakEnd) {
-                                if (slot === lunchBreakStart) {
-                                    return (
-                                        <div
-                                            key={slot}
-                                            className="col-span-2 flex items-center justify-center bg-muted/50 rounded-md h-16 text-muted-foreground"
-                                        >
-                                           <Utensils className="inline-block h-5 w-5 mr-2"/> Lunch Break
-                                        </div>
-                                    );
-                                }
+                            if (slot >= lunchBreakStart && slot < lunchBreakEnd) {
                                 return null;
                             }
                             
