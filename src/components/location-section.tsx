@@ -1,6 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
-import { RouteRecommendation } from "./route-recommendation";
 
 export function LocationSection() {
   return (
@@ -20,7 +19,6 @@ export function LocationSection() {
             <p className="text-muted-foreground">Mahakavi Kalidas Kalamandir, Nashik, Maharashtra</p>
           </div>
         </div>
-        <RouteRecommendation />
       </CardContent>
     </Card>
   );
