@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { AtSign, Lock } from "lucide-react";
+import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -57,18 +58,27 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4">
-      <div className="w-full max-w-md">
+    <div className="relative flex flex-col items-center justify-center min-h-screen bg-background p-4">
+        <Image 
+            src="https://storage.googleapis.com/project-spark-prod/project-spark-b82af2b3-5353-4889-8d8a-de500c3b313f/static-assets/433e1444-2458-45e0-827c-9b508f72f236"
+            alt="Background"
+            layout="fill"
+            objectFit="cover"
+            className="z-0"
+            data-ai-hint="temple water"
+        />
+        <div className="absolute inset-0 bg-black/50 z-10" />
+      <div className="w-full max-w-md z-20">
         <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold font-headline text-foreground">
+            <h1 className="text-4xl font-bold font-headline text-white">
                 CitizExperience
             </h1>
-            <p className="text-muted-foreground">Your portal to seamless civic engagement.</p>
+            <p className="text-gray-200">Your portal to seamless civic engagement.</p>
         </div>
-        <Card className="shadow-lg rounded-xl">
+        <Card className="shadow-lg rounded-xl bg-white/10 backdrop-blur-sm border-white/20 text-white">
           <CardHeader>
             <CardTitle className="font-headline text-3xl">Welcome Back</CardTitle>
-            <CardDescription>Sign in to continue to your account.</CardDescription>
+            <CardDescription className="text-gray-200">Sign in to continue to your account.</CardDescription>
           </CardHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -86,6 +96,7 @@ export default function LoginPage() {
                           type="email"
                           placeholder="john.doe@example.com"
                           {...field}
+                          className="bg-white/20 border-white/30 placeholder:text-gray-300"
                         />
                       </FormControl>
                       <FormMessage />
@@ -101,7 +112,7 @@ export default function LoginPage() {
                         <Lock className="h-4 w-4" /> Password
                       </FormLabel>
                       <FormControl>
-                        <Input type="password" placeholder="••••••••" {...field} />
+                        <Input type="password" placeholder="••••••••" {...field} className="bg-white/20 border-white/30 placeholder:text-gray-300" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -109,10 +120,10 @@ export default function LoginPage() {
                 />
               </CardContent>
               <CardFooter className="flex flex-col gap-4">
-                <Button type="submit" size="lg" className="w-full">
+                <Button type="submit" size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
                   Sign In
                 </Button>
-                <Button variant="link" size="sm">
+                <Button variant="link" size="sm" className="text-white/80 hover:text-white">
                     Forgot Password?
                 </Button>
               </CardFooter>
@@ -120,8 +131,8 @@ export default function LoginPage() {
           </Form>
         </Card>
       </div>
-       <footer className="px-4 py-6 sm:px-6 lg:px-8 mt-auto">
-        <div className="max-w-7xl mx-auto text-center text-muted-foreground text-sm">
+       <footer className="px-4 py-6 sm:px-6 lg:px-8 mt-auto z-20">
+        <div className="max-w-7xl mx-auto text-center text-white/70 text-sm">
           <p>&copy; {new Date().getFullYear()} CitizExperience. All Rights Reserved.</p>
         </div>
       </footer>
