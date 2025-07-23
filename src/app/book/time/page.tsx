@@ -11,11 +11,12 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { BookingProgress } from "@/components/booking-progress";
 
-const timeSlots = Array.from({ length: 18 }, (_, i) => {
-    const hour = 9 + Math.floor(i / 2);
-    const minute = i % 2 === 0 ? '00' : '30';
-    return `${hour.toString().padStart(2, '0')}:${minute}`;
-}).filter(slot => slot < "18:00"); // Slots from 09:00 to 17:30
+const timeSlots = Array.from({ length: 6 }, (_, i) => {
+    const totalMinutes = i * 90; // 1.5 hours = 90 minutes
+    const hour = 9 + Math.floor(totalMinutes / 60);
+    const minute = totalMinutes % 60;
+    return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+}); // Slots from 09:00, 10:30, 12:00, 13:30, 15:00, 16:30
 
 const lunchBreakStart = "13:00";
 const lunchBreakEnd = "14:30";
@@ -97,7 +98,13 @@ export default function SelectTimePage() {
     const formattedDate = format(new Date(date), 'PPP');
     const totalAvailableToday = Object.values(availableSlots).reduce((sum, count, index) => {
       const slot = timeSlots[index];
-      if (slot >= lunchBreakStart && slot < lunchBreakEnd) {
+      // A slot is unavailable if it starts during lunch break, or ends after lunch break starts
+      const slotStart = new Date(`${date}T${slot}:00`);
+      const slotEnd = new Date(slotStart.getTime() + 90 * 60000); // 90 minutes
+      const lunchStart = new Date(`${date}T${lunchBreakStart}:00`);
+      const lunchEnd = new Date(`${date}T${lunchBreakEnd}:00`);
+
+      if (slotStart < lunchEnd && slotEnd > lunchStart) {
         return sum;
       }
       return sum + count;
@@ -126,7 +133,12 @@ export default function SelectTimePage() {
                 <CardContent>
                     <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
                         {timeSlots.map(slot => {
-                            if (slot >= lunchBreakStart && slot < lunchBreakEnd) {
+                            const slotStart = new Date(`${date}T${slot}:00`);
+                            const slotEnd = new Date(slotStart.getTime() + 90 * 60000); // 90 minutes
+                            const lunchStart = new Date(`${date}T${lunchBreakStart}:00`);
+                            const lunchEnd = new Date(`${date}T${lunchBreakEnd}:00`);
+
+                            if (slotStart < lunchEnd && slotEnd > lunchStart) {
                                 return null;
                             }
                             
