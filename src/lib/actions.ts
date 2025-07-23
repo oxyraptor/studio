@@ -2,7 +2,7 @@
 
 import { recommendRoute } from "@/ai/flows/recommend-route";
 
-const EXPERIENCE_CENTER_LOCATION = "34.0522,-118.2437"; // Downtown Los Angeles
+const EXPERIENCE_CENTER_LOCATION = "19.9999477,73.7845846"; // Mahakavi Kalidas Kalamandir, Nashik
 
 export async function getRouteRecommendation(
   userLocation: string

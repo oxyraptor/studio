@@ -1,16 +1,26 @@
 import { BookingSection } from "@/components/booking-section";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { MapPin } from "lucide-react";
+import Link from "next/link";
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <header className="px-4 py-6 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <h1 className="text-4xl font-bold font-headline text-foreground">
-            CitizExperience
-          </h1>
-          <p className="mt-2 text-lg text-muted-foreground">
-            Your portal to seamless civic engagement. Book your visit and find your way to us with ease.
-          </p>
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <div>
+            <h1 className="text-4xl font-bold font-headline text-foreground">
+              CitizExperience
+            </h1>
+            <p className="mt-2 text-lg text-muted-foreground">
+              Your portal to seamless civic engagement. Book your visit and find your way to us with ease.
+            </p>
+          </div>
+          <Link href="/map" className={cn(buttonVariants({ variant: "outline" }), "flex items-center gap-2")}>
+            <MapPin className="h-5 w-5" />
+            <span>View Map</span>
+          </Link>
         </div>
       </header>
       <main className="flex-grow px-4 sm:px-6 lg:px-8 py-8">
