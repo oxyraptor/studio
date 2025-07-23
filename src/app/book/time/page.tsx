@@ -64,9 +64,9 @@ export default function SelectTimePage() {
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4">
              <Button asChild variant="outline" className="absolute top-4 left-4">
-                <Link href="/book/date" className="flex items-center gap-2">
+                <Link href="/home" className="flex items-center gap-2">
                     <ArrowLeft className="h-4 w-4" />
-                    Back to Date
+                    Back to Home
                 </Link>
             </Button>
             <Card className="w-full max-w-lg shadow-lg rounded-xl">
