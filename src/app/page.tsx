@@ -100,25 +100,25 @@ export default function Home() {
             <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 items-center gap-12">
                 <div className="text-left">
                     <h2 className="text-5xl md:text-6xl font-bold leading-tight tracking-tight">
-                    Meet the Architects<br/>of Independent India
+                    A New Era of<br/>Public Engagement
                     </h2>
                     <p className="mt-4 text-lg text-gray-400">
-                    Discover the lives and legacies of the prime ministers who shaped the nation.
+                    Your central hub for seamless access to public services and information.
                     </p>
                     <Button asChild size="lg" variant="outline" className="mt-8 border-primary text-primary hover:bg-primary/10">
-                        <Link href="#">
-                            Learn More
+                        <Link href="/map">
+                            Map
                         </Link>
                     </Button>
                 </div>
                 <div className="relative h-64 md:h-auto md:w-full">
                   <Image 
-                      src="https://storage.googleapis.com/project-spark-prod/project-spark-b82af2b3-5353-4889-8d8a-de500c3b313f/static-assets/4a858169-72c6-47a3-81b3-524a9197022f"
-                      alt="Architects of Independent India"
+                      src="https://placehold.co/600x400.png"
+                      alt="Citizen Experience Center"
                       width={600}
                       height={400}
-                      className="rounded-lg shadow-2xl grayscale"
-                      data-ai-hint="indian prime ministers"
+                      className="rounded-lg shadow-2xl"
+                      data-ai-hint="modern government building"
                   />
                 </div>
             </div>
