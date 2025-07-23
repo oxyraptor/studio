@@ -5,20 +5,10 @@ import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Clock, ArrowLeft, CheckCircle } from "lucide-react";
+import { Clock, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { format } from "date-fns";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-
 
 const timeSlots = Array.from({ length: 9 }, (_, i) => `${(i + 9).toString().padStart(2, '0')}:00`);
 const MAX_TICKETS_PER_SLOT = 20;
@@ -45,7 +35,6 @@ export default function SelectTimePage() {
 
     const [selectedTime, setSelectedTime] = React.useState<string | null>(null);
     const [availableSlots, setAvailableSlots] = React.useState<Record<string, number>>({});
-    const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
     React.useEffect(() => {
         if (!date) {
@@ -64,9 +53,7 @@ export default function SelectTimePage() {
         const availableCount = availableSlots[slot] ?? 0;
         if (availableCount > 0) {
             setSelectedTime(slot);
-            // In a real app, you would save the booking here.
-            console.log("Booking submitted:", { date, time: slot });
-            setIsDialogOpen(true);
+            router.push(`/book/details?date=${date}&time=${slot}`);
         }
     };
     
@@ -77,7 +64,6 @@ export default function SelectTimePage() {
     const formattedDate = format(new Date(date), 'PPP');
 
     return (
-        <>
         <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4">
              <Button asChild variant="outline" className="absolute top-4 left-4">
                 <Link href="/home" className="flex items-center gap-2">
@@ -112,30 +98,13 @@ export default function SelectTimePage() {
                     </div>
                 </CardContent>
                 <CardFooter>
-                    <p className="text-sm text-muted-foreground text-center w-full">
-                        Your booking will be confirmed immediately upon selecting a time slot.
-                    </p>
+                     <Button asChild variant="link" className="w-full">
+                        <Link href={`/book/date`}>
+                           <ArrowLeft className="mr-2 h-4 w-4" /> Go back to date selection
+                        </Link>
+                    </Button>
                 </CardFooter>
             </Card>
         </div>
-        <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <div className="flex justify-center">
-                    <CheckCircle className="h-16 w-16 text-green-500" />
-                </div>
-                <AlertDialogTitle className="text-center text-2xl">Booking Confirmed!</AlertDialogTitle>
-                <AlertDialogDescription className="text-center">
-                  Your visit for {formattedDate} at {selectedTime} is booked.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogAction onClick={() => router.push('/home')} className="w-full">
-                  Back to Home
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </>
     );
 }
