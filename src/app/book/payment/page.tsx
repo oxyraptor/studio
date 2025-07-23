@@ -25,6 +25,7 @@ import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 import { BookingProgress } from "@/components/booking-progress";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const COST_PER_VISITOR = 500;
 
@@ -40,7 +41,15 @@ const paymentSchema = z.object({
     }),
 });
 
+const upiSchema = z.object({
+    upiId: z.string().refine((val) => /^[\w.-]+@[\w.-]+$/.test(val), {
+        message: "Please enter a valid UPI ID.",
+    }),
+});
+
 type PaymentFormValues = z.infer<typeof paymentSchema>;
+type UpiFormValues = z.infer<typeof upiSchema>;
+
 
 export default function PaymentPage() {
   const router = useRouter();
@@ -54,12 +63,19 @@ export default function PaymentPage() {
   const { toast } = useToast();
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
-  const form = useForm<PaymentFormValues>({
+  const cardForm = useForm<PaymentFormValues>({
     resolver: zodResolver(paymentSchema),
     defaultValues: {
       cardNumber: "",
       expiryDate: "",
       cvc: "",
+    },
+  });
+  
+  const upiForm = useForm<UpiFormValues>({
+    resolver: zodResolver(upiSchema),
+    defaultValues: {
+      upiId: "",
     },
   });
 
@@ -83,7 +99,7 @@ export default function PaymentPage() {
   const formattedDate = format(new Date(date), "PPP");
   const goBackLink = `/book/contact?date=${date}&time=${time}&visitors=${visitors}&name=${name}&email=${email}&whatsapp=${whatsapp}`;
   
-  function onPaymentSubmit(data: PaymentFormValues) {
+  function onPaymentSubmit(data: PaymentFormValues | UpiFormValues) {
     console.log("Dummy Payment Submitted:", data);
     setIsDialogOpen(true);
   };
@@ -143,65 +159,103 @@ export default function PaymentPage() {
                 <span className="text-2xl font-bold text-primary">₹{totalAmount.toLocaleString()}</span>
             </div>
           </CardContent>
-
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onPaymentSubmit)}>
-                <CardContent className="space-y-4">
-                    <Separator />
-                     <FormField
-                        control={form.control}
-                        name="cardNumber"
-                        render={({ field }) => (
-                            <FormItem>
-                            <FormLabel>Card Number</FormLabel>
-                            <FormControl>
-                                <Input placeholder="0000 0000 0000 0000" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                            </FormItem>
-                        )}
-                        />
-                    <div className="flex gap-4">
-                        <FormField
-                            control={form.control}
-                            name="expiryDate"
-                            render={({ field }) => (
-                                <FormItem className="flex-1">
-                                <FormLabel>Expiry Date</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="MM/YY" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                                </FormItem>
-                            )}
-                            />
-                        <FormField
-                            control={form.control}
-                            name="cvc"
-                            render={({ field }) => (
-                                <FormItem className="flex-1">
-                                <FormLabel>CVC</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="123" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                </CardContent>
-                <CardFooter className="flex flex-col sm:flex-row gap-2">
-                    <Button asChild variant="link" className="w-full sm:w-auto">
-                    <Link href={goBackLink}>
-                        <ArrowLeft className="mr-2 h-4 w-4" /> Go back
-                    </Link>
-                    </Button>
-                    <Button type="submit" size="lg" className="w-full sm:w-auto flex-grow bg-primary text-primary-foreground hover:bg-primary/90">
-                        <CreditCard className="mr-2 h-4 w-4" /> Pay Now
-                    </Button>
-                </CardFooter>
-            </form>
-          </Form>
+          <Separator />
+            <Tabs defaultValue="card" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="card">Card</TabsTrigger>
+                    <TabsTrigger value="upi">UPI</TabsTrigger>
+                </TabsList>
+                <TabsContent value="card">
+                     <Form {...cardForm}>
+                        <form onSubmit={cardForm.handleSubmit(onPaymentSubmit)}>
+                            <CardContent className="space-y-4 pt-4">
+                                <FormField
+                                    control={cardForm.control}
+                                    name="cardNumber"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                        <FormLabel>Card Number</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="0000 0000 0000 0000" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                        </FormItem>
+                                    )}
+                                    />
+                                <div className="flex gap-4">
+                                    <FormField
+                                        control={cardForm.control}
+                                        name="expiryDate"
+                                        render={({ field }) => (
+                                            <FormItem className="flex-1">
+                                            <FormLabel>Expiry Date</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="MM/YY" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                            </FormItem>
+                                        )}
+                                        />
+                                    <FormField
+                                        control={cardForm.control}
+                                        name="cvc"
+                                        render={({ field }) => (
+                                            <FormItem className="flex-1">
+                                            <FormLabel>CVC</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="123" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+                            </CardContent>
+                            <CardFooter className="flex flex-col sm:flex-row gap-2">
+                                <Button asChild variant="link" className="w-full sm:w-auto">
+                                <Link href={goBackLink}>
+                                    <ArrowLeft className="mr-2 h-4 w-4" /> Go back
+                                </Link>
+                                </Button>
+                                <Button type="submit" size="lg" className="w-full sm:w-auto flex-grow bg-primary text-primary-foreground hover:bg-primary/90">
+                                    <CreditCard className="mr-2 h-4 w-4" /> Pay Now
+                                </Button>
+                            </CardFooter>
+                        </form>
+                    </Form>
+                </TabsContent>
+                <TabsContent value="upi">
+                   <Form {...upiForm}>
+                        <form onSubmit={upiForm.handleSubmit(onPaymentSubmit)}>
+                            <CardContent className="space-y-4 pt-4">
+                               <FormField
+                                    control={upiForm.control}
+                                    name="upiId"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                        <FormLabel>UPI ID</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="your-id@upi" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                        </FormItem>
+                                    )}
+                                    />
+                            </CardContent>
+                            <CardFooter className="flex flex-col sm:flex-row gap-2">
+                                <Button asChild variant="link" className="w-full sm:w-auto">
+                                <Link href={goBackLink}>
+                                    <ArrowLeft className="mr-2 h-4 w-4" /> Go back
+                                </Link>
+                                </Button>
+                                <Button type="submit" size="lg" className="w-full sm:w-auto flex-grow bg-primary text-primary-foreground hover:bg-primary/90">
+                                    Pay with UPI
+                                </Button>
+                            </CardFooter>
+                        </form>
+                    </Form>
+                </TabsContent>
+            </Tabs>
         </Card>
       </div>
 
