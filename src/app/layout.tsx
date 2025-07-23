@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Pradhanmantri Sangrahalaya",
+  title: "Citizen Experience Center",
   description: "Meet the Architects of Independent India",
 };
 

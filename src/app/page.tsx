@@ -48,7 +48,7 @@ export default function Home() {
                       <path d="M12.9999 16.8L25.9999 29.4L38.9999 16.8L25.9999 42L12.9999 16.8Z" fill="#D4AF37"/>
                   </svg>
                   <h1 className="text-lg font-semibold tracking-wider">
-                    Pradhanmantri Sangrahalaya
+                    Citizen Experience Center
                   </h1>
               </div>
               
