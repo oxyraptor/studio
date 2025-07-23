@@ -11,6 +11,7 @@ import { ChevronDown, Menu } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
     <Link href={href} className="text-sm font-medium text-gray-300 hover:text-white transition-colors">
@@ -116,15 +117,43 @@ export default function Home() {
                         </Link>
                     </Button>
                 </div>
-                <div className="relative h-64 md:h-96 md:w-full">
-                  <Image 
-                      src="https://placehold.co/600x400.png"
-                      alt="Citizen Experience Center"
-                      width={600}
-                      height={400}
-                      className="rounded-lg shadow-2xl object-cover w-full h-full"
-                      data-ai-hint="modern government building"
-                  />
+                <div className="relative h-96 w-full">
+                    <Carousel className="w-full h-full rounded-lg overflow-hidden shadow-2xl">
+                        <CarouselContent>
+                            <CarouselItem>
+                                <Image 
+                                    src="https://placehold.co/600x400.png"
+                                    alt="Citizen Experience Center Exhibit 1"
+                                    width={600}
+                                    height={400}
+                                    className="object-cover w-full h-full"
+                                    data-ai-hint="modern government building"
+                                />
+                            </CarouselItem>
+                             <CarouselItem>
+                                <Image 
+                                    src="https://placehold.co/600x400.png"
+                                    alt="Citizen Experience Center Exhibit 2"
+                                    width={600}
+                                    height={400}
+                                    className="object-cover w-full h-full"
+                                    data-ai-hint="interactive exhibit display"
+                                />
+                            </CarouselItem>
+                             <CarouselItem>
+                                <Image 
+                                    src="https://placehold.co/600x400.png"
+                                    alt="Citizen Experience Center Exhibit 3"
+                                    width={600}
+                                    height={400}
+                                    className="object-cover w-full h-full"
+                                    data-ai-hint="people engaging with technology"
+                                />
+                            </CarouselItem>
+                        </CarouselContent>
+                        <CarouselPrevious />
+                        <CarouselNext />
+                    </Carousel>
                 </div>
             </div>
         </main>
