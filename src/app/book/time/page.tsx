@@ -13,6 +13,7 @@ import { BookingProgress } from "@/components/booking-progress";
 
 const timeSlots = Array.from({ length: 9 }, (_, i) => `${(i + 9).toString().padStart(2, '0')}:00`);
 const MAX_TICKETS_PER_SLOT = 20;
+const DAILY_VISITOR_LIMIT = 100;
 
 // Mock function to get bookings for a given date
 const getBookingsForDate = (date: string) => {
@@ -20,12 +21,36 @@ const getBookingsForDate = (date: string) => {
     // For now, we'll generate predictable "random" availability.
     const mockBookings: Record<string, number> = {};
     const dateSeed = new Date(date).getDate();
+    let totalBooked = 0;
+
     timeSlots.forEach((slot, index) => {
-        // Create pseudo-randomness based on date and slot
-        const availability = (dateSeed * (index + 1)) % (MAX_TICKETS_PER_SLOT + 1);
-        mockBookings[slot] = availability;
+        // Create pseudo-randomness based on date and slot for booked tickets
+        const bookedCount = (dateSeed * (index + 1)) % (MAX_TICKETS_PER_SLOT + 1);
+        totalBooked += bookedCount;
+        mockBookings[slot] = bookedCount;
     });
-    return mockBookings;
+
+    // If total booked for the day exceeds the daily limit, adjust it.
+    // This is a mock scenario; a real DB would prevent this.
+    if (totalBooked > DAILY_VISITOR_LIMIT) {
+        let excess = totalBooked - DAILY_VISITOR_LIMIT;
+        for (const slot of timeSlots.reverse()) {
+            if (excess <= 0) break;
+            const currentBooked = mockBookings[slot];
+            const reduction = Math.min(currentBooked, excess);
+            mockBookings[slot] -= reduction;
+            excess -= reduction;
+        }
+    }
+    
+    // Now calculate availability
+    const availableSlots: Record<string, number> = {};
+    timeSlots.forEach(slot => {
+        const booked = mockBookings[slot] ?? 0;
+        availableSlots[slot] = MAX_TICKETS_PER_SLOT - booked;
+    });
+
+    return availableSlots;
 };
 
 export default function SelectTimePage() {
@@ -63,6 +88,7 @@ export default function SelectTimePage() {
     }
 
     const formattedDate = format(new Date(date), 'PPP');
+    const totalAvailableToday = Object.values(availableSlots).reduce((sum, count) => sum + count, 0);
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4">
@@ -78,7 +104,10 @@ export default function SelectTimePage() {
             <Card className="w-full max-w-lg shadow-lg rounded-xl">
                 <CardHeader>
                     <CardTitle className="font-headline text-3xl">Step 2: Select a Time</CardTitle>
-                    <CardDescription>Choose a time for your visit on <strong>{formattedDate}</strong>.</CardDescription>
+                    <CardDescription>Choose a time for your visit on <strong>{formattedDate}</strong>.
+                     <br />
+                     Total tickets available for today: <strong>{totalAvailableToday > DAILY_VISITOR_LIMIT ? DAILY_VISITOR_LIMIT : totalAvailableToday}</strong>
+                    </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
