@@ -12,6 +12,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { BookingProgress } from "@/components/booking-progress";
 
 function isToday(date: Date) {
   const today = new Date();
@@ -41,6 +42,9 @@ export default function SelectDatePage() {
               Back to Home
           </Link>
       </Button>
+      <div className="w-full max-w-md">
+        <BookingProgress currentStep={1} />
+      </div>
       <Card className="w-full max-w-md shadow-lg rounded-xl">
         <CardHeader>
           <CardTitle className="font-headline text-3xl">Step 1: Select a Date</CardTitle>

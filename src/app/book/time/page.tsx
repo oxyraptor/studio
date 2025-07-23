@@ -9,6 +9,7 @@ import { Clock, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { format } from "date-fns";
+import { BookingProgress } from "@/components/booking-progress";
 
 const timeSlots = Array.from({ length: 9 }, (_, i) => `${(i + 9).toString().padStart(2, '0')}:00`);
 const MAX_TICKETS_PER_SLOT = 20;
@@ -71,6 +72,9 @@ export default function SelectTimePage() {
                     Back to Home
                 </Link>
             </Button>
+            <div className="w-full max-w-lg">
+                <BookingProgress currentStep={2} />
+            </div>
             <Card className="w-full max-w-lg shadow-lg rounded-xl">
                 <CardHeader>
                     <CardTitle className="font-headline text-3xl">Step 2: Select a Time</CardTitle>

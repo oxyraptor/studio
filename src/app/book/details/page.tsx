@@ -23,6 +23,7 @@ import { ArrowLeft, CheckCircle, Users } from "lucide-react";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
+import { BookingProgress } from "@/components/booking-progress";
 
 const detailsSchema = z.object({
   numberOfVisitors: z.coerce.number().min(1, "You must have at least one visitor.").max(10, "You can book for a maximum of 10 visitors."),
@@ -82,6 +83,9 @@ export default function DetailsPage() {
                 Back to Home
             </Link>
         </Button>
+        <div className="w-full max-w-lg">
+            <BookingProgress currentStep={3} />
+        </div>
         <Card className="w-full max-w-lg shadow-lg rounded-xl">
           <CardHeader>
             <CardTitle className="font-headline text-3xl">Step 3: Visitor Details</CardTitle>
