@@ -1,3 +1,4 @@
+
 import { LocationSection } from "@/components/location-section";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,7 @@ export default function MapPage() {
       <header className="px-4 py-6 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
             <Button asChild variant="outline">
-                <Link href="/" className="flex items-center gap-2">
+                <Link href="/home" className="flex items-center gap-2">
                     <ArrowLeft className="h-4 w-4" />
                     Back to Home
                 </Link>

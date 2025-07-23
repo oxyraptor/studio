@@ -146,7 +146,7 @@ export default function PaymentPage() {
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogAction onClick={() => router.push('/')} className="w-full">
+                <AlertDialogAction onClick={() => router.push('/home')} className="w-full">
                   Back to Home
                 </AlertDialogAction>
               </AlertDialogFooter>
