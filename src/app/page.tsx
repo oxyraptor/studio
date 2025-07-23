@@ -35,7 +35,7 @@ export default function Home() {
       {/* Background pattern */}
       <div 
         className="absolute inset-0 z-0 opacity-10"
-        style={{ backgroundImage: 'url("https://www.toptal.com/designers/subtlepatterns/uploads/double-bubble-outline.png")' }} 
+        style={{ backgroundImage: 'url("https://www.toptal.com/designers/subtlepatterns/uploads/struckaxiom.png")' }} 
       />
       <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black z-10" />
       
