@@ -1,5 +1,4 @@
 import { BookingSection } from "@/components/booking-section";
-import { LocationSection } from "@/components/location-section";
 
 export default function Home() {
   return (
@@ -16,12 +15,9 @@ export default function Home() {
       </header>
       <main className="flex-grow px-4 sm:px-6 lg:px-8 py-8">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+          <div className="grid grid-cols-1">
             <div className="lg:col-span-3">
               <BookingSection />
-            </div>
-            <div className="lg:col-span-2">
-              <LocationSection />
             </div>
           </div>
         </div>
